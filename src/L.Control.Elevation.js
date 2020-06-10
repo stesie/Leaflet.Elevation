@@ -800,6 +800,8 @@ L.Control.Elevation = L.Control.extend({
         //this._areapath.datum(this._data).attr("d", this._area);
         this._areapath.attr("d", "M0 0");
 
+        this._surfaceGroup.selectAll("line").remove();
+
         this._x.domain([0, 1]);
         this._y.domain([0, 1]);
         this._updateAxis();
