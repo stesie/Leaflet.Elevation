@@ -757,13 +757,14 @@ L.Control.Elevation = L.Control.extend({
             .attr("d", this._area);
 
         if (this.options.surfaceLineClassFn) {
-            var surfaceLineUpdate = this._surfaceGroup.selectAll("line").data(this._data.slice(0, -1))
+            var data = this._data, x = this._x, y = this._y;
+            var surfaceLineUpdate = this._surfaceGroup.selectAll("line").data(data.slice(0, -1))
             surfaceLineUpdate.enter().append("line")
             surfaceLineUpdate
-                .attr("x1", d => this._x(d.dist))
-                .attr("y1", d => this._y(d.altitude))
-                .attr("x2", (_, i) => this._x(this._data[i + 1].dist))
-                .attr("y2", (_, i) => this._y(this._data[i + 1].altitude))
+                .attr("x1", function(d) { return x(d.dist); })
+                .attr("y1", function(d) { return y(d.altitude); })
+                .attr("x2", function(_, i) { return x(data[i + 1].dist); })
+                .attr("y2", function(_, i) { return y(data[i + 1].altitude); })
                 .attr("class", this.options.surfaceLineClassFn)
         } else {
             this._surfaceGroup.selectAll("line").remove();
