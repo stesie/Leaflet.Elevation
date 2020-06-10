@@ -29,7 +29,8 @@ L.Control.Elevation = L.Control.extend({
             iconCssClass: "elevation-toggle-icon",
             title: "Elevation"
         },
-        imperial: false
+        imperial: false,
+        surfaceLineClassFn: undefined
     },
     __mileFactor: 0.621371,
     __footFactor: 3.28084,
@@ -89,6 +90,7 @@ L.Control.Elevation = L.Control.extend({
             });
 
         var g = d3.select(this._container).select("svg").select("g");
+        this._surfaceGroup = g.append("g").attr("fill", "none").attr("stroke-width", 4);
 
         this._areapath = g.append("path")
             .attr("class", "area");
@@ -753,6 +755,20 @@ L.Control.Elevation = L.Control.extend({
         this._y.domain(ydomain);
         this._areapath.datum(this._data)
             .attr("d", this._area);
+
+        if (this.options.surfaceLineClassFn) {
+            var surfaceLineUpdate = this._surfaceGroup.selectAll("line").data(this._data.slice(0, -1))
+            surfaceLineUpdate.enter().append("line")
+            surfaceLineUpdate
+                .attr("x1", d => this._x(d.dist))
+                .attr("y1", d => this._y(d.altitude))
+                .attr("x2", (_, i) => this._x(this._data[i + 1].dist))
+                .attr("y2", (_, i) => this._y(this._data[i + 1].altitude))
+                .attr("class", this.options.surfaceLineClassFn)
+        } else {
+            this._surfaceGroup.selectAll("line").remove();
+        }
+
         this._updateAxis();
 
         this._fullExtent = this._calculateFullExtent(this._data);
