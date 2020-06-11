@@ -90,7 +90,7 @@ L.Control.Elevation = L.Control.extend({
             });
 
         var g = d3.select(this._container).select("svg").select("g");
-        this._surfaceGroup = g.append("g").attr("fill", "none").attr("stroke-width", 4);
+        this._surfaceGroup = g.append("g").attr("fill", "none").attr("class", "surface-indicator-segments");
 
         this._areapath = g.append("path")
             .attr("class", "area");
